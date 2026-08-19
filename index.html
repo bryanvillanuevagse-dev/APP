@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>School Values Word Order Challenge</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#0B1730">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Word Challenge">
+<style>
+:root{
+  --navy-deep:#0B1730;
+  --navy-mid:#122447;
+  --navy-panel:#16305c;
+  --gold:#F2B705;
+  --gold-soft:#F7D774;
+  --a-color:#2E7DE1;
+  --a-glow:#5FB4FF;
+  --a-dark:#153a6b;
+  --b-color:#E6394C;
+  --b-glow:#FF6B7A;
+  --b-dark:#6b1520;
+  --ink:#F4F7FC;
+  --ink-dim:#B9C6E0;
+  --panel-radius:22px;
+  --tile-radius:14px;
+  font-size:16px;
+}
+*{box-sizing:border-box;}
+html,body{
+  margin:0;padding:0;height:100%;
+  background:
+    radial-gradient(circle at 15% 10%, #1c3a6e 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, #5a1a2e 0%, transparent 40%),
+    linear-gradient(180deg,var(--navy-deep),#081022 90%);
+  color:var(--ink);
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  overflow-x:hidden;
+  -webkit-user-select:none;user-select:none;
+  touch-action:manipulation;
+}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.app{
+  display:flex;flex-direction:column;min-height:100vh;padding:14px 18px 22px;gap:12px;
+  touch-action:none;overscroll-behavior:none;
+}
+
+/* ---------- HEADER ---------- */
+.header{
+  text-align:center;padding:10px 8px 6px;
+  border-bottom:2px solid rgba(242,183,5,0.25);
+}
+.header h1{
+  margin:0;font-size:clamp(1.6rem,3.2vw,2.6rem);letter-spacing:1px;
+  font-weight:900;
+  background:linear-gradient(90deg,var(--gold-soft),var(--gold) 40%,#fff6d8 70%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 30px rgba(242,183,5,0.25);
+}
+.header .subtitle{margin-top:4px;font-size:clamp(.85rem,1.4vw,1.1rem);color:var(--ink-dim);letter-spacing:3px;text-transform:uppercase;font-weight:600;}
+.header .instruction{margin-top:6px;font-size:clamp(.8rem,1.2vw,.95rem);color:var(--ink-dim);opacity:.85;}
+
+.status-strip{
+  display:flex;justify-content:center;align-items:center;gap:22px;flex-wrap:wrap;
+  margin-top:10px;
+}
+.status-pill{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:999px;padding:8px 20px;
+  font-weight:800;letter-spacing:1px;font-size:.95rem;
+  display:flex;align-items:center;gap:8px;
+}
+.status-pill.round{color:var(--gold-soft);}
+.status-pill.challenge{color:#fff;}
+.status-pill.clock{font-variant-numeric:tabular-nums;font-size:1.15rem;color:var(--gold);}
+
+/* ---------- TEACHER CONTROLS ---------- */
+.teacher-bar{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+  padding:12px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.09);border-radius:18px;
+}
+.tbtn{
+  border:none;border-radius:12px;padding:12px 18px;font-weight:800;font-size:.92rem;
+  letter-spacing:.5px;color:#fff;background:#233b66;
+  box-shadow:0 3px 0 rgba(0,0,0,.35);transition:transform .08s ease;
+}
+.tbtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35);}
+.tbtn.primary{background:linear-gradient(180deg,#2fbf6b,#1f9553);}
+.tbtn.warn{background:linear-gradient(180deg,#e6a13a,#c07d1e);}
+.tbtn.danger{background:linear-gradient(180deg,#e6394c,#a3222f);}
+.tbtn.ghost{background:rgba(255,255,255,0.08);}
+.tbtn:disabled{opacity:.4;cursor:not-allowed;}
+.tbtn .ic{margin-right:6px;}
+
+/* ---------- ARENA ---------- */
+.arena{
+  flex:1;display:grid;grid-template-columns:1fr 6px 1fr;gap:0;
+  border-radius:var(--panel-radius);overflow:hidden;
+  min-height:420px;
+  box-shadow:0 20px 50px rgba(0,0,0,.45);
+}
+.divider{
+  background:linear-gradient(180deg,var(--gold),transparent 10%,transparent 90%,var(--gold));
+  position:relative;
+}
+.divider::before{
+  content:"VS";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:var(--gold);color:#1a1200;font-weight:900;border-radius:50%;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:.75rem;
+  box-shadow:0 0 0 6px var(--navy-deep),0 0 22px rgba(242,183,5,.6);
+}
+
+.team-panel{
+  display:flex;flex-direction:column;padding:16px 18px;gap:10px;
+  position:relative;overflow:hidden;
+}
+.team-panel[data-team="a"]{background:linear-gradient(160deg,var(--a-dark) 0%, #0d1f3d 70%);}
+.team-panel[data-team="b"]{background:linear-gradient(200deg,var(--b-dark) 0%, #2a0c14 70%);}
+.team-panel::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 60px rgba(0,0,0,.4);}
+
+.team-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.team-name{
+  font-size:clamp(1.1rem,2vw,1.6rem);font-weight:900;letter-spacing:.5px;
+  display:flex;align-items:center;gap:8px;
+}
+.team-panel[data-team="a"] .team-name{color:var(--a-glow);}
+.team-panel[data-team="b"] .team-name{color:var(--b-glow);}
+.team-meta{display:flex;gap:10px;flex-wrap:wrap;}
+.meta-chip{
+  background:rgba(0,0,0,.28);border-radius:12px;padding:6px 12px;font-weight:700;font-size:.85rem;
+  display:flex;flex-direction:column;align-items:center;min-width:64px;
+}
+.meta-chip .val{font-size:1.15rem;font-variant-numeric:tabular-nums;}
+.meta-chip .lbl{font-size:.62rem;letter-spacing:1px;color:var(--ink-dim);text-transform:uppercase;}
+
+.status-line{
+  font-weight:800;font-size:1rem;padding:6px 12px;border-radius:10px;
+  background:rgba(255,255,255,0.08);align-self:flex-start;
+}
+.status-line.ready{color:#cfe4ff;}
+.status-line.correct{background:#1f9553;color:#fff;animation:pop .5s ease;}
+.status-line.incorrect{background:#a3222f;color:#fff;animation:shake .4s ease;}
+.status-line.win{background:var(--gold);color:#1a1200;animation:pop .6s ease;}
+
+.zone-label{
+  font-size:.75rem;font-weight:800;letter-spacing:1.5px;color:var(--ink-dim);
+  text-transform:uppercase;margin-top:2px;
+}
+.zone-label .zone-sub{text-transform:none;font-weight:600;letter-spacing:0;opacity:.7;font-size:.72rem;}
+.dropzone{
+  background:rgba(0,0,0,.25);border-radius:16px;padding:12px;
+  display:flex;flex-wrap:wrap;align-content:flex-start;gap:10px;
+  min-height:100px;position:relative;
+  border:2px dashed rgba(255,255,255,0.14);
+  transition:background .15s ease, border-color .15s ease;
+  touch-action:none;
+}
+.dropzone.word-bank{ min-height:110px; background:rgba(255,255,255,0.03); }
+.dropzone.answer-area{
+  min-height:100px;
+  background:rgba(0,0,0,.32);
+  border-style:solid;border-width:2px;
+}
+.dropzone.drag-over{ border-color:var(--gold); background:rgba(242,183,5,0.12); }
+.dropzone.answer-area.empty::before{
+  content:"Drag words here to build your answer";
+  color:rgba(255,255,255,.3);font-weight:700;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;
+  width:100%;pointer-events:none;
+}
+.dropzone.locked::after{
+  content:"READY?";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;font-weight:900;color:rgba(255,255,255,.35);letter-spacing:4px;background:rgba(0,0,0,.35);
+  border-radius:14px;z-index:5;
+}
+.tile{
+  min-height:60px;padding:10px 18px;border-radius:var(--tile-radius);
+  background:linear-gradient(180deg,#ffffff,#e7edf7);
+  color:#0e1c33;font-weight:800;font-size:clamp(.95rem,1.6vw,1.25rem);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 0 rgba(0,0,0,.3),0 6px 14px rgba(0,0,0,.25);
+  touch-action:none;user-select:none;cursor:grab;position:relative;
+  transition:box-shadow .15s ease, transform .15s ease;
+  white-space:nowrap;
+}
+.team-panel[data-team="a"] .tile{border-bottom:4px solid var(--a-color);}
+.team-panel[data-team="b"] .tile{border-bottom:4px solid var(--b-color);}
+.tile.picked{
+  box-shadow:0 12px 24px rgba(0,0,0,.45);transform:scale(1.08);z-index:50;cursor:grabbing;
+}
+.tile.selected{outline:4px solid var(--gold);outline-offset:2px;}
+.tile.dragging-ghost{position:fixed;pointer-events:none;z-index:999;opacity:.95;}
+.tile.correct-flash{animation:tileWin .8s ease;}
+@keyframes tileWin{0%{background:linear-gradient(180deg,#fff,#e7edf7);}45%{background:linear-gradient(180deg,#fff6d8,var(--gold-soft));transform:translateY(-6px) scale(1.06);}100%{background:linear-gradient(180deg,#fff,#e7edf7);transform:none;}}
+@keyframes pop{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.08);}100%{transform:scale(1);opacity:1;}}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);}}
+
+.team-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.abtn{
+  flex:1;min-width:130px;border:none;border-radius:14px;padding:14px 10px;font-weight:900;
+  font-size:1rem;letter-spacing:.5px;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.35);
+}
+.abtn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.35);}
+.team-panel[data-team="a"] .abtn.check{background:linear-gradient(180deg,var(--a-glow),var(--a-color));}
+.team-panel[data-team="b"] .abtn.check{background:linear-gradient(180deg,var(--b-glow),var(--b-color));}
+.abtn.hint{background:linear-gradient(180deg,#ffd873,var(--gold));color:#1a1200;}
+.abtn:disabled{opacity:.35;}
+.hint-box{
+  font-size:.85rem;background:rgba(0,0,0,.3);padding:8px 12px;border-radius:10px;color:var(--gold-soft);
+  display:none;font-weight:700;
+}
+.hint-box.show{display:block;}
+
+/* ---------- MODALS ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(4,8,18,.78);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;
+}
+.modal-overlay.show{display:flex;}
+.modal{
+  background:linear-gradient(160deg,#152a52,#0c1730);
+  border:1px solid rgba(255,255,255,.12);border-radius:24px;
+  padding:26px 28px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+  touch-action:pan-y;
+}
+.modal h2{margin-top:0;font-size:1.5rem;color:var(--gold-soft);letter-spacing:1px;}
+.modal p{color:var(--ink-dim);line-height:1.5;}
+.choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px;}
+.choice-card{
+  background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,.1);border-radius:16px;
+  padding:18px 14px;text-align:center;font-weight:800;font-size:1.05rem;color:#fff;
+}
+.choice-card:active{background:rgba(242,183,5,0.25);border-color:var(--gold);}
+.choice-card .num{display:block;font-size:1.6rem;color:var(--gold-soft);margin-bottom:4px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap;}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;}
+.settings-grid label{display:flex;flex-direction:column;gap:6px;font-size:.85rem;color:var(--ink-dim);font-weight:700;}
+.settings-grid input,.settings-grid select{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:10px;
+  padding:10px 12px;color:#fff;font-size:1rem;font-weight:600;
+}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.05);padding:10px 14px;border-radius:12px;}
+.leaderboard-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-radius:14px;margin-bottom:10px;font-weight:800;font-size:1.1rem;}
+.leaderboard-row.gold{background:linear-gradient(90deg,rgba(242,183,5,.25),transparent);border:1px solid var(--gold);}
+.leaderboard-row.silver{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);}
+.reveal-block{margin-bottom:18px;padding:14px 16px;background:rgba(255,255,255,.05);border-radius:14px;}
+.reveal-block h3{margin:0 0 6px;color:var(--gold-soft);}
+.reveal-block p{color:#fff;margin:4px 0;}
+.reveal-block ol{color:#fff;margin:4px 0;padding-left:20px;}
+
+.result-banner{text-align:center;font-size:1.4rem;font-weight:900;color:var(--gold-soft);margin-bottom:10px;}
+.result-times{display:flex;justify-content:center;gap:30px;margin:14px 0;}
+.result-times div{text-align:center;}
+.result-times .t-label{font-size:.8rem;color:var(--ink-dim);letter-spacing:1px;text-transform:uppercase;}
+.result-times .t-val{font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;}
+
+/* select word mode drop target end */
+.end-slot{
+  min-height:60px;min-width:60px;border:3px dashed rgba(255,255,255,.25);border-radius:var(--tile-radius);
+  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-weight:800;font-size:.8rem;
+}
+
+.footer-note{text-align:center;color:var(--ink-dim);font-size:.75rem;opacity:.6;margin-top:6px;}
+
+@media (max-width:820px){
+  .arena{grid-template-columns:1fr;grid-template-rows:1fr 6px 1fr;}
+  .divider{height:6px;}
+  .divider::before{top:0;left:50%;}
+}
+@media print{
+  .teacher-bar,.status-strip,.team-actions,.tbtn{display:none !important;}
+}
+#sr-live{position:absolute;left:-9999px;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="header">
+    <h1>🏆 SCHOOL VALUES WORD ORDER CHALLENGE</h1>
+    <div class="subtitle">Vision • Mission • Core Values • Tagline</div>
+    <div class="instruction">Two teams. One Smart Board. Arrange the words correctly and be the first team to complete the challenge!</div>
+    <div class="status-strip">
+      <div class="status-pill round" id="roundLabel">ROUND 1</div>
+      <div class="status-pill challenge" id="challengeLabel">SELECT A CHALLENGE TO BEGIN</div>
+      <div class="status-pill clock" id="clockLabel">--:--</div>
+    </div>
+  </div>
+
+  <div class="teacher-bar">
+    <button class="tbtn ghost" id="btnSelectChallenge">🎯 Select Challenge</button>
+    <button class="tbtn primary" id="btnStartRound">▶ Start Round</button>
+    <button class="tbtn warn" id="btnPause">⏸ Pause</button>
+    <button class="tbtn ghost" id="btnResetRound">↺ Reset Round</button>
+    <button class="tbtn ghost" id="btnNextRound">⏭ Next Round</button>
+    <button class="tbtn danger" id="btnEndGame">🏁 End Game</button>
+    <button class="tbtn ghost" id="btnSettings">⚙ Settings</button>
+    <button class="tbtn ghost" id="btnModeToggle">🖐 Mode: Drag</button>
+    <button class="tbtn ghost" id="btnMusicToggle">🎵 Music: On</button>
+    <button class="tbtn ghost" id="btnPrint">🖨 Print</button>
+  </div>
+
+  <div class="arena">
+    <div class="team-panel" data-team="a">
+      <div class="team-head">
+        <div class="team-name"><span>🔵</span><span id="nameA">TEAM A</span></div>
+        <div class="team-meta">
+          <div class="meta-chip"><span class="val" id="scoreA">0</span><span class="lbl">Score</span></div>
+          <div class="meta-chip"><span class="val" id="timeA">00:00</span><span class="lbl">Time</span></div>
+          <div class="meta-chip"><span class="val" id="attemptsA">0</span><span class="lbl">Tries</span></div>
+        </div>
+      </div>
+      <div class="status-line ready" id="statusA">Ready!</div>
+      <div class="hint-box" id="hintBoxA"></div>
+      <div class="zone-label">🔤 WORD BANK</div>
+      <div class="dropzone word-bank locked" id="bankA" data-zone="bank" data-team="a"></div>
+      <div class="zone-label">✍ YOUR ANSWER <span class="zone-sub">(drag words here in order)</span></div>
+      <div class="dropzone answer-area locked" id="answerA" data-zone="answer" data-team="a"></div>
+      <div class="team-actions">
+        <button class="abtn check" id="checkA">✅ CHECK ANSWER</button>
+        <button class="abtn hint" id="hintA">💡 HINT</button>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="team-panel" data-team="b">
+      <div class="team-head">
+        <div class="team-name"><span>🔴</span><span id="nameB">TEAM B</span></div>
+        <div class="team-meta">
+          <div class="meta-chip"><span class="val" id="scoreB">0</span><span class="lbl">Score</span></div>
+          <div class="meta-chip"><span class="val" id="timeB">00:00</span><span class="lbl">Time</span></div>
+          <div class="meta-chip"><span class="val" id="attemptsB">0</span><span class="lbl">Tries</span></div>
+        </div>
+      </div>
+      <div class="status-line ready" id="statusB">Ready!</div>
+      <div class="hint-box" id="hintBoxB"></div>
+      <div class="zone-label">🔤 WORD BANK</div>
+      <div class="dropzone word-bank locked" id="bankB" data-zone="bank" data-team="b"></div>
+      <div class="zone-label">✍ YOUR ANSWER <span class="zone-sub">(drag words here in order)</span></div>
+      <div class="dropzone answer-area locked" id="answerB" data-zone="answer" data-team="b"></div>
+      <div class="team-actions">
+        <button class="abtn check" id="checkB">✅ CHECK ANSWER</button>
+        <button class="abtn hint" id="hintB">💡 HINT</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">Fully offline • No data leaves this browser • Smart Board Edition</div>
+</div>
+
+<!-- CHALLENGE SELECT MODAL -->
+<div class="modal-overlay" id="modalChallenge">
+  <div class="modal">
+    <h2>CHOOSE YOUR CHALLENGE</h2>
+    <p>Pick the category for this round. Both teams will get the same category with independently scrambled words.</p>
+    <div class="choice-grid" id="challengeGrid"></div>
+    <div class="modal-actions"><button class="tbtn ghost" id="closeChallengeModal">Cancel</button></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="modalSettings">
+  <div class="modal">
+    <h2>⚙ TEACHER SETTINGS</h2>
+    <div class="settings-grid">
+      <label>Team A Name
+        <input type="text" id="setNameA" value="TEAM A" maxlength="24">
+      </label>
+      <label>Team B Name
+        <input type="text" id="setNameB" value="TEAM B" maxlength="24">
+      </label>
+      <label>Round Time
+        <select id="setTime">
+          <option value="30">30 seconds</option>
+          <option value="60">60 seconds</option>
+          <option value="90" selected>90 seconds</option>
+          <option value="120">120 seconds</option>
+          <option value="0">No Time Limit</option>
+        </select>
+      </label>
+      <label>Number of Rounds
+        <select id="setRounds">
+          <option value="0">Open (no total)</option>
+          <option value="3">3</option>
+          <option value="5" selected>5</option>
+          <option value="8">8</option>
+        </select>
+      </label>
+    </div>
+    <div class="settings-grid" style="margin-top:14px;">
+      <div class="toggle-row"><span>🔊 Sound Effects</span><input type="checkbox" id="setSound" checked style="width:22px;height:22px;"></div>
+      <div class="toggle-row"><span>🎵 Background Music</span><input type="checkbox" id="setMusic" checked style="width:22px;height:22px;"></div>
+      <div class="toggle-row"><span>💡 Hints Enabled</span><input type="checkbox" id="setHints" checked style="width:22px;height:22px;"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="tbtn danger" id="btnResetGame">Reset Entire Game</button>
+      <button class="tbtn ghost" id="closeSettings">Close</button>
+      <button class="tbtn primary" id="applySettings">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="modalConfirm">
+  <div class="modal" style="max-width:420px;text-align:center;">
+    <h2 id="confirmTitle">Are you sure?</h2>
+    <p id="confirmBody"></p>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="tbtn danger" id="confirmYes">YES, RESET</button>
+      <button class="tbtn ghost" id="confirmNo">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROUND RESULT MODAL -->
+<div class="modal-overlay" id="modalResult">
+  <div class="modal" style="text-align:center;">
+    <div class="result-banner" id="resultBanner">🏆 RESULT</div>
+    <div class="result-times">
+      <div><div class="t-label" id="resultNameA">TEAM A</div><div class="t-val" id="resultTimeA">--</div></div>
+      <div><div class="t-label" id="resultNameB">TEAM B</div><div class="t-val" id="resultTimeB">--</div></div>
+    </div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="tbtn primary" id="btnGoNextRound">NEXT ROUND ⏭</button>
+      <button class="tbtn ghost" id="closeResult">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD MODAL -->
+<div class="modal-overlay" id="modalLeaderboard">
+  <div class="modal" style="text-align:center;">
+    <h2>🏆 FINAL LEADERBOARD</h2>
+    <div id="leaderboardBody"></div>
+    <p id="leaderboardMsg" style="margin-top:10px;font-weight:700;color:var(--gold-soft);"></p>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="tbtn primary" id="btnReveal">📖 REVEAL ALL</button>
+      <button class="tbtn ghost" id="closeLeaderboard">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVEAL MODAL -->
+<div class="modal-overlay" id="modalReveal">
+  <div class="modal" id="revealContent">
+    <h2>📖 THE FULL ANSWERS</h2>
+  </div>
+</div>
+
+<div id="sr-live" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   DATA
+   ============================================================ */
+const CHALLENGES = {
+  vision: {
+    key:"vision", title:"VISION", shortRound:false,
+    parts:[
+      { label:"VISION", words:["to","become","one","of","the","top","five","international","schools","in","the","Kingdom","of","Saudi","Arabia"],
+        hint:"The statement begins with \u201Cto become\u2026\u201D" }
+    ]
+  },
+  mission: {
+    key:"mission", title:"MISSION", shortRound:false,
+    parts:[
+      { label:"MISSION", words:["to","provide","smart","education","with","international","standards","through","the","application","of","the","latest","educational","methods","and","with","a","highly","efficient","local","and","international","Human","Resources","in","addition","to","build","a","strategic","partnerships","to","achieve","sustainability"],
+        hint:"The statement begins with \u201Cto provide\u2026\u201D" }
+    ]
+  },
+  corevalues: {
+    key:"corevalues", title:"CORE VALUES", shortRound:false,
+    parts:[
+      { label:"CORE VALUES STATEMENT", words:["Our","understanding","of","our","values","will","make","us","one","of","the","top","five","schools","in","the","Kingdom"],
+        hint:"The statement begins with \u201COur understanding\u2026\u201D" },
+      { label:"CORE VALUES", words:["Sustainability","Quality","Commitment","Credibility","Responsibility"],
+        hint:"The first value is Sustainability." }
+    ]
+  },
+  tagline: {
+    key:"tagline", title:"SCHOOL TAGLINE", shortRound:true,
+    parts:[
+      { label:"SCHOOL TAGLINE", words:["where","excellence","begins"],
+        hint:"The first word begins with \u201Cwhere\u2026\u201D" }
+    ]
+  }
+};
+
+const MIXED_OPTIONS = [
+  {key:"vision", partIndex:0, label:"VISION"},
+  {key:"mission", partIndex:0, label:"MISSION"},
+  {key:"corevalues", partIndex:0, label:"CORE VALUES STATEMENT"},
+  {key:"corevalues", partIndex:1, label:"CORE VALUES"},
+  {key:"tagline", partIndex:0, label:"TAGLINE"}
+];
+
+const POINTS = {
+  win:100, second:50, tie:75,
+  shortWin:50, shortSecond:25, shortTie:35,
+  hintPenalty:10
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  settings:{ nameA:"TEAM A", nameB:"TEAM B", roundTime:90, totalRounds:5, sound:true, music:true, hintsEnabled:true },
+  roundNumber:1,
+  currentChallengeKey:null,   // 'vision' | 'mission' | 'corevalues' | 'tagline' | 'mixed'
+  currentMixedResolved:null,  // resolved {key,partIndex,label} when mixed chosen
+  roundStatus:"idle",         // idle | running | paused | over
+  interactionMode:"drag",     // drag | select
+  timeLimit:90,
+  elapsed:0,
+  timerHandle:null,
+  teams:{
+    a:teamState("a"),
+    b:teamState("b")
+  },
+  pendingConfirm:null,
+  gameEnded:false
+};
+
+function teamState(id){
+  return {
+    id:id,
+    score:0,
+    attempts:0,
+    hintsUsedThisRound:0,
+    partIndex:0,
+    bank:[],             // scrambled words not yet placed: array of {id,text}
+    answer:[],           // words placed in order by the student: array of {id,text}
+    completed:false,
+    completionTime:null,
+    selectedTileId:null,
+    finishRank:null,
+    transientStatus:null
+  };
+}
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+function $(id){ return document.getElementById(id); }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function arraysEqual(a,b){
+  if(a.length!==b.length) return false;
+  for(let i=0;i<a.length;i++){ if(a[i]!==b[i]) return false; }
+  return true;
+}
+function fmtTime(sec){
+  sec = Math.max(0, Math.round(sec));
+  const m = Math.floor(sec/60).toString().padStart(2,"0");
+  const s = (sec%60).toString().padStart(2,"0");
+  return m+":"+s;
+}
+function announce(msg){ $("sr-live").textContent = msg; }
+
+/* ============================================================
+   CHALLENGE RESOLUTION
+   ============================================================ */
+function getActiveChallengeDef(){
+  if(state.currentChallengeKey==="mixed"){
+    return CHALLENGES[state.currentMixedResolved.key];
+  }
+  return CHALLENGES[state.currentChallengeKey];
+}
+function getActivePartIndexBase(){
+  if(state.currentChallengeKey==="mixed") return state.currentMixedResolved.partIndex;
+  return 0;
+}
+function getPart(team){
+  const def = getActiveChallengeDef();
+  if(!def) return null;
+  return def.parts[team.partIndex];
+}
+function isShortRound(){
+  const def = getActiveChallengeDef();
+  return !!(def && def.shortRound);
+}
+function totalPartsForChallenge(){
+  const def = getActiveChallengeDef();
+  if(!def) return 0;
+  if(state.currentChallengeKey==="mixed") return 1; // mixed only plays the single resolved part
+  return def.parts.length;
+}
+
+/* ============================================================
+   TILE GENERATION
+   ============================================================ */
+let tileSeq = 0;
+function makeTilesForTeam(team, words){
+  const roundTag = state.roundNumber+"-"+team.partIndex+"-"+(tileSeq++);
+  let order;
+  do {
+    order = shuffle(words.map((w,i)=>({w,i})));
+  } while(words.length>1 && arraysEqual(order.map(o=>o.w), words));
+  return order.map((o,idx)=>({
+    id:"tile-"+team.id+"-"+roundTag+"-"+idx,
+    text:o.w
+  }));
+}
+
+function loadPartForTeam(team){
+  const part = getPart(team);
+  if(!part) return;
+  team.bank = makeTilesForTeam(team, part.words);
+  team.answer = [];
+  team.selectedTileId = null;
+}
+
+/* Find which zone/array + index a tile currently lives in */
+function findTileLocation(team, tileId){
+  let idx = team.bank.findIndex(t=>t.id===tileId);
+  if(idx!==-1) return {zone:"bank", index:idx};
+  idx = team.answer.findIndex(t=>t.id===tileId);
+  if(idx!==-1) return {zone:"answer", index:idx};
+  return null;
+}
+function zoneArray(team, zone){
+  return zone==="bank" ? team.bank : team.answer;
+}
+
+function startNewChallengeForTeam(team){
+  team.partIndex = 0;
+  team.attempts = 0;
+  team.hintsUsedThisRound = 0;
+  team.completed = false;
+  team.completionTime = null;
+  team.finishRank = null;
+  team.transientStatus = null;
+  loadPartForTeam(team);
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function render(){
+  renderHeader();
+  renderTeam("a");
+  renderTeam("b");
+  updateControlAvailability();
+}
+
+function renderHeader(){
+  const rn = state.settings.totalRounds>0
+    ? "ROUND "+state.roundNumber+" OF "+state.settings.totalRounds
+    : "ROUND "+state.roundNumber;
+  $("roundLabel").textContent = rn;
+
+  let label = "SELECT A CHALLENGE TO BEGIN";
+  if(state.currentChallengeKey){
+    if(state.currentChallengeKey==="mixed"){
+      label = "\uD83D\uDD25 MIXED CHALLENGE: "+state.currentMixedResolved.label;
+    } else {
+      label = CHALLENGES[state.currentChallengeKey].title;
+      const def = CHALLENGES[state.currentChallengeKey];
+      if(def.parts.length>1){
+        const anyPartIdx = Math.max(state.teams.a.partIndex, state.teams.b.partIndex);
+        label += " \u2014 "+def.parts[Math.min(anyPartIdx, def.parts.length-1)].label;
+      }
+    }
+  }
+  $("challengeLabel").textContent = label;
+
+  if(state.timeLimit===0){
+    $("clockLabel").textContent = state.roundStatus==="idle" ? "--:--" : fmtTime(state.elapsed);
+  } else {
+    const remaining = Math.max(0, state.timeLimit - state.elapsed);
+    $("clockLabel").textContent = state.roundStatus==="idle" ? fmtTime(state.timeLimit) : fmtTime(remaining);
+  }
+}
+
+function renderTeam(id){
+  const team = state.teams[id];
+  const upper = id.toUpperCase();
+  $("name"+upper).textContent = state.settings["name"+upper];
+  $("score"+upper).textContent = team.score;
+  $("attempts"+upper).textContent = team.attempts;
+
+  let displayTime;
+  if(team.completed && team.completionTime!=null){
+    displayTime = fmtTime(team.completionTime);
+  } else if(state.roundStatus==="idle"){
+    displayTime = fmtTime(0);
+  } else {
+    displayTime = fmtTime(state.elapsed);
+  }
+  $("time"+upper).textContent = displayTime;
+
+  const statusEl = $("status"+upper);
+  if(team.transientStatus){
+    statusEl.textContent = team.transientStatus.text;
+    statusEl.className = "status-line "+team.transientStatus.kind;
+  } else if(!state.currentChallengeKey){
+    statusEl.textContent = "Ready!";
+    statusEl.className = "status-line ready";
+  } else if(team.completed){
+    statusEl.textContent = team.finishRank===1 ? "\uD83C\uDFC6 FINISHED FIRST!" : (team.finishRank===2 ? "\u2705 COMPLETED!" : "\u2705 COMPLETED!");
+    statusEl.className = "status-line win";
+  } else if(state.roundStatus==="idle"){
+    statusEl.textContent = "Ready!";
+    statusEl.className = "status-line ready";
+  } else if(state.roundStatus==="paused"){
+    statusEl.textContent = "\u23F8 Paused";
+    statusEl.className = "status-line ready";
+  } else {
+    statusEl.textContent = "Arranging\u2026";
+    statusEl.className = "status-line ready";
+  }
+
+  const locked = state.roundStatus==="idle" || !state.currentChallengeKey;
+  $("bank"+upper).classList.toggle("locked", locked);
+  $("answer"+upper).classList.toggle("locked", locked);
+  renderZones(id);
+
+  const hintBox = $("hintBox"+upper);
+  const checkBtn = $("check"+upper);
+  const hintBtn = $("hint"+upper);
+  const canInteract = state.currentChallengeKey && state.roundStatus==="running" && !team.completed;
+  checkBtn.disabled = !canInteract;
+  hintBtn.disabled = !canInteract || !state.settings.hintsEnabled || team.hintsUsedThisRound>=2;
+}
+
+function renderZones(id){
+  const team = state.teams[id];
+  renderOneZone(id, "bank", team.bank);
+  renderOneZone(id, "answer", team.answer);
+  const answerEl = $("answer"+id.toUpperCase());
+  answerEl.classList.toggle("empty", team.answer.length===0);
+}
+
+function renderOneZone(id, zoneName, tiles){
+  const team = state.teams[id];
+  const containerId = (zoneName==="bank" ? "bank" : "answer") + id.toUpperCase();
+  const container = $(containerId);
+  container.innerHTML = "";
+  tiles.forEach(t=>{
+    const el = document.createElement("div");
+    el.className = "tile";
+    el.textContent = t.text;
+    el.dataset.tileId = t.id;
+    el.dataset.team = id;
+    el.dataset.zone = zoneName;
+    if(team.selectedTileId===t.id) el.classList.add("selected");
+    attachTileHandlers(el, id, t.id);
+    container.appendChild(el);
+  });
+  if(state.interactionMode==="select" && state.roundStatus==="running" && !team.completed){
+    const endSlot = document.createElement("div");
+    endSlot.className = "end-slot";
+    endSlot.textContent = "PLACE HERE";
+    endSlot.dataset.team = id;
+    endSlot.dataset.zone = zoneName;
+    endSlot.addEventListener("pointerup", (e)=>{
+      e.stopPropagation();
+      handleSelectTarget(id, zoneName, null);
+    });
+    container.appendChild(endSlot);
+  }
+}
+
+/* ============================================================
+   DRAG + SELECT INTERACTION (multi-touch safe)
+   ============================================================ */
+// Each active touch/pointer drags its own tile independently, keyed by
+// pointerId, so two (or more) fingers on the Smart Board can drag
+// different tiles at the same time without interfering with each other.
+const activeDrags = new Map(); // pointerId -> {teamId, tileId, offsetX, offsetY}
+
+function attachTileHandlers(el, teamId, tileId){
+  el.addEventListener("pointerdown", (e)=>{
+    if(state.roundStatus!=="running") return;
+    const team = state.teams[teamId];
+    if(team.completed) return;
+    if(state.interactionMode==="select"){
+      e.preventDefault();
+      handleSelectTap(teamId, tileId, el);
+      return;
+    }
+    startDrag(e, teamId, tileId, el);
+  });
+}
+
+function getZoneContainer(teamId, zone){
+  return $((zone==="bank"?"bank":"answer") + teamId.toUpperCase());
+}
+
+function startDrag(e, teamId, tileId, el){
+  e.preventDefault();
+  const rect = el.getBoundingClientRect();
+  activeDrags.set(e.pointerId, {
+    teamId, tileId,
+    offsetX: e.clientX - rect.left,
+    offsetY: e.clientY - rect.top
+  });
+  el.dataset.pointerId = String(e.pointerId);
+  el.classList.add("picked","dragging-ghost");
+  el.style.position = "fixed";
+  el.style.left = rect.left+"px";
+  el.style.top = rect.top+"px";
+  el.style.width = rect.width+"px";
+  el.style.zIndex = 999;
+}
+
+/* Single set of document-level listeners handles every concurrent
+   pointer/touch; each is looked up in activeDrags by its own pointerId
+   so simultaneous drags never share state. */
+function onGlobalPointerMove(ev){
+  const ctx = activeDrags.get(ev.pointerId);
+  if(!ctx) return;
+  ev.preventDefault();
+  const el = document.querySelector('.tile[data-pointer-id="'+ev.pointerId+'"]');
+  if(!el) return;
+  el.style.left = (ev.clientX - ctx.offsetX)+"px";
+  el.style.top = (ev.clientY - ctx.offsetY)+"px";
+  dragPreview(ev, ctx.teamId, ctx.tileId, el);
+}
+function onGlobalPointerEnd(ev){
+  const ctx = activeDrags.get(ev.pointerId);
+  if(!ctx) return;
+  activeDrags.delete(ev.pointerId);
+  finishDrag(ctx.teamId, ctx.tileId);
+}
+
+/* While dragging, figure out which zone (bank/answer, same team only) the
+   pointer is hovering, compute the insertion index within that zone, and
+   move the tile's data there live so the layout previews the drop. */
+function dragPreview(ev, teamId, tileId, draggedEl){
+  const bankZone = getZoneContainer(teamId, "bank");
+  const answerZone = getZoneContainer(teamId, "answer");
+  bankZone.classList.remove("drag-over");
+  answerZone.classList.remove("drag-over");
+
+  if(!document.elementFromPoint) return;
+  const elUnder = document.elementFromPoint(ev.clientX, ev.clientY);
+  if(!elUnder) return;
+  const zoneEl = elUnder.closest ? elUnder.closest('.dropzone[data-team="'+teamId+'"]') : null;
+  if(!zoneEl) return; // pointer isn't over either of this team's zones right now
+
+  const zoneName = zoneEl.dataset.zone;
+  zoneEl.classList.add("drag-over");
+
+  const team = state.teams[teamId];
+  const loc = findTileLocation(team, tileId);
+  if(!loc) return;
+
+  const els = Array.from(zoneEl.querySelectorAll(".tile")).filter(x=>x!==draggedEl);
+  let targetIndex = els.length;
+  for(let i=0;i<els.length;i++){
+    const r = els[i].getBoundingClientRect();
+    const midX = r.left + r.width/2;
+    if(ev.clientY < r.top - 4) continue;
+    if(ev.clientY <= r.bottom + 4){
+      if(ev.clientX < midX){ targetIndex = i; break; }
+    }
+  }
+
+  const sourceArr = zoneArray(team, loc.zone);
+  const movingTile = sourceArr[loc.index];
+  const sourceRemoved = sourceArr.filter(t=>t.id!==tileId);
+  const destArr = loc.zone===zoneName ? sourceRemoved : zoneArray(team, zoneName).slice();
+  const clamped = Math.max(0, Math.min(targetIndex, destArr.length));
+
+  const wouldBeSame = loc.zone===zoneName &&
+    arraysEqual(sourceRemoved.map(t=>t.id).slice(0,clamped).concat([tileId], sourceRemoved.map(t=>t.id).slice(clamped)),
+      zoneArray(team, loc.zone).map(t=>t.id));
+  if(wouldBeSame) return;
+
+  // remove from source
+  if(loc.zone==="bank"){ team.bank = sourceRemoved; } else { team.answer = sourceRemoved; }
+  destArr.splice(clamped, 0, movingTile);
+  if(zoneName==="bank"){ team.bank = destArr; } else { team.answer = destArr; }
+
+  const savedRect = draggedEl.getBoundingClientRect();
+  renderZones(teamId);
+  const newEl = zoneEl.querySelector('[data-tile-id="'+CSS.escape(tileId)+'"]');
+  if(newEl){
+    newEl.dataset.pointerId = String(ev.pointerId);
+    newEl.classList.add("picked","dragging-ghost");
+    newEl.style.position = "fixed";
+    newEl.style.left = savedRect.left+"px";
+    newEl.style.top = savedRect.top+"px";
+    newEl.style.width = savedRect.width+"px";
+    newEl.style.zIndex = 999;
+  }
+  $("answer"+teamId.toUpperCase()).classList.remove("empty");
+}
+
+function finishDrag(teamId, tileId){
+  const cur = document.querySelector('.tile[data-tile-id="'+CSS.escape(tileId)+'"]');
+  if(cur){
+    cur.classList.remove("picked","dragging-ghost");
+    cur.style.position = "";
+    cur.style.left = "";
+    cur.style.top = "";
+    cur.style.width = "";
+    cur.style.zIndex = "";
+    delete cur.dataset.pointerId;
+  }
+  getZoneContainer(teamId,"bank").classList.remove("drag-over");
+  getZoneContainer(teamId,"answer").classList.remove("drag-over");
+  renderZones(teamId);
+  playSound("tick");
+}
+
+/* ---- Select word mode ---- */
+function handleSelectTap(teamId, tileId, el){
+  const team = state.teams[teamId];
+  if(team.selectedTileId === tileId){
+    team.selectedTileId = null;
+    renderZones(teamId);
+    return;
+  }
+  if(team.selectedTileId === null){
+    team.selectedTileId = tileId;
+    renderZones(teamId);
+  } else {
+    const loc = findTileLocation(team, tileId);
+    handleSelectTarget(teamId, loc ? loc.zone : "answer", tileId);
+  }
+}
+function handleSelectTarget(teamId, targetZone, targetTileId){
+  const team = state.teams[teamId];
+  if(!team.selectedTileId) return;
+  const movingId = team.selectedTileId;
+  if(movingId === targetTileId){ team.selectedTileId=null; renderZones(teamId); return; }
+  const loc = findTileLocation(team, movingId);
+  if(!loc) return;
+  const moving = zoneArray(team, loc.zone)[loc.index];
+  if(!moving) return;
+
+  const sourceRemoved = zoneArray(team, loc.zone).filter(t=>t.id!==movingId);
+  if(loc.zone==="bank"){ team.bank = sourceRemoved; } else { team.answer = sourceRemoved; }
+
+  const destArr = loc.zone===targetZone ? zoneArray(team, targetZone) : zoneArray(team, targetZone).slice();
+  if(targetTileId===null){
+    destArr.push(moving);
+  } else {
+    const idx = destArr.findIndex(t=>t.id===targetTileId);
+    if(idx===-1){ destArr.push(moving); }
+    else { destArr.splice(idx,0,moving); }
+  }
+  if(targetZone==="bank"){ team.bank = destArr; } else { team.answer = destArr; }
+
+  team.selectedTileId = null;
+  renderZones(teamId);
+  playSound("tick");
+}
+
+/* ============================================================
+   SOUND (WebAudio, generated locally)
+   ============================================================ */
+let audioCtx = null;
+function getAudioCtx(){
+  if(!state.settings.sound) return null;
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+    catch(e){ return null; }
+  }
+  return audioCtx;
+}
+function tone(freq, start, dur, type, gainVal){
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || "sine";
+  osc.frequency.value = freq;
+  gain.gain.value = 0;
+  osc.connect(gain); gain.connect(ctx.destination);
+  const t0 = ctx.currentTime + start;
+  gain.gain.setValueAtTime(0, t0);
+  gain.gain.linearRampToValueAtTime(gainVal||0.15, t0+0.02);
+  gain.gain.linearRampToValueAtTime(0, t0+dur);
+  osc.start(t0);
+  osc.stop(t0+dur+0.02);
+}
+function playSound(kind){
+  if(!state.settings.sound) return;
+  if(kind==="correct"){
+    tone(523.25,0,0.16,"triangle"); tone(659.25,0.14,0.16,"triangle"); tone(783.99,0.28,0.28,"triangle");
+  } else if(kind==="incorrect"){
+    tone(200,0,0.22,"sawtooth",0.12); tone(150,0.15,0.25,"sawtooth",0.12);
+  } else if(kind==="win"){
+    [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f, i*0.13, 0.2,"triangle",0.16));
+  } else if(kind==="tick"){
+    tone(880,0,0.05,"square",0.05);
+  } else if(kind==="hint"){
+    tone(440,0,0.1,"sine",0.1); tone(554,0.08,0.12,"sine",0.1);
+  } else if(kind==="start"){
+    tone(392,0,0.1,"square",0.12); tone(523,0.1,0.12,"square",0.12);
+  } else if(kind==="timeup"){
+    tone(220,0,0.3,"sawtooth",0.15); tone(180,0.28,0.35,"sawtooth",0.15);
+  }
+}
+
+/* ---- Locally-generated looping "game show" background bed ----
+   A short chord progression (C - Am - F - G) arpeggiated with soft
+   triangle plucks plus a gentle bass pulse on each chord change.
+   Fully synthesized with oscillators, no audio files, loops while
+   a round is actively running. */
+const BG_CHORDS = [
+  { root:65.41,  notes:[130.81,164.81,196.00,261.63] }, // C major
+  { root:55.00,  notes:[110.00,130.81,164.81,220.00] }, // A minor
+  { root:43.65,  notes:[87.31, 130.81,174.61,261.63] }, // F major
+  { root:49.00,  notes:[98.00, 123.47,146.83,196.00] }  // G major
+];
+let bgMusicHandle = null;
+let bgStep = 0;
+function bgTick(){
+  if(!state.settings.sound || !state.settings.music) return;
+  const chordIdx = Math.floor(bgStep/4) % BG_CHORDS.length;
+  const chord = BG_CHORDS[chordIdx];
+  const noteIdx = bgStep % 4;
+  const arpNote = chord.notes[noteIdx];
+  tone(arpNote, 0, 0.24, "triangle", 0.045);
+  if(noteIdx===0){
+    tone(chord.root, 0, 0.55, "sine", 0.055);
+  }
+  bgStep++;
+}
+function startBackgroundMusic(){
+  if(!state.settings.sound || !state.settings.music) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  if(ctx.state==="suspended"){ ctx.resume(); }
+  stopBackgroundMusic();
+  bgStep = 0;
+  bgMusicHandle = setInterval(bgTick, 220);
+}
+function stopBackgroundMusic(){
+  if(bgMusicHandle){ clearInterval(bgMusicHandle); bgMusicHandle = null; }
+}
+
+/* ============================================================
+   CHECK ANSWER / HINT
+   ============================================================ */
+function checkAnswer(teamId){
+  const team = state.teams[teamId];
+  if(state.roundStatus!=="running" || team.completed) return;
+  const part = getPart(team);
+  if(!part) return;
+  team.attempts++;
+  const currentSeq = team.answer.map(t=>t.text);
+  const correct = team.bank.length===0 && arraysEqual(currentSeq, part.words);
+
+  if(correct){
+    flashTilesCorrect(teamId);
+    const totalParts = totalPartsForChallenge();
+    if(team.partIndex < totalParts - 1){
+      team.partIndex++;
+      loadPartForTeam(team);
+      showStatus(teamId, "correct", "\uD83C\uDF89 GOT IT! NEXT PART\u2026", 1200);
+      playSound("correct");
+      render();
+      return;
+    }
+    completeTeam(teamId);
+  } else {
+    showStatus(teamId, "incorrect", "\u274C NOT YET!", 1400);
+    playSound("incorrect");
+    render();
+  }
+}
+
+function flashTilesCorrect(teamId){
+  const ws = $("answer"+teamId.toUpperCase());
+  ws.querySelectorAll(".tile").forEach(el=>el.classList.add("correct-flash"));
+}
+
+function showStatus(teamId, kind, text, holdMs){
+  const team = state.teams[teamId];
+  const cssKind = kind==="correct" ? "win" : (kind==="incorrect" ? "incorrect" : "ready");
+  team.transientStatus = {text, kind:cssKind};
+  const el = $("status"+teamId.toUpperCase());
+  el.textContent = text;
+  el.className = "status-line "+cssKind;
+  if(holdMs){
+    setTimeout(()=>{
+      if(team.transientStatus && team.transientStatus.text===text){
+        team.transientStatus = null;
+        render();
+      }
+    }, holdMs);
+  }
+}
+
+function completeTeam(teamId){
+  const team = state.teams[teamId];
+  team.completed = true;
+  team.completionTime = state.elapsed;
+  const other = state.teams[teamId==="a"?"b":"a"];
+
+  if(!other.completed){
+    team.finishRank = 1;
+  } else {
+    const diff = Math.abs(team.completionTime - other.completionTime);
+    if(diff<=1){
+      team.finishRank = 1; other.finishRank = 1;
+    } else {
+      team.finishRank = 2;
+    }
+  }
+  awardPoints(teamId);
+  flashTilesCorrect(teamId);
+  playSound("win");
+  celebrate(teamId);
+  showStatus(teamId, "correct", team.finishRank===1 ? "\uD83C\uDFC6 GOT IT FIRST!" : "\u2705 COMPLETED!");
+  render();
+  maybeShowRoundResult();
+}
+
+function awardPoints(teamId){
+  const team = state.teams[teamId];
+  const short = isShortRound();
+  let pts;
+  if(team.finishRank===1){
+    const otherCompleted = state.teams[teamId==="a"?"b":"a"].completed;
+    pts = short ? POINTS.shortWin : POINTS.win;
+  } else {
+    pts = short ? POINTS.shortSecond : POINTS.second;
+  }
+  team.score += pts;
+}
+
+function maybeShowRoundResult(){
+  const a = state.teams.a, b = state.teams.b;
+  if(a.completed && b.completed){
+    state.roundStatus = "over";
+    stopTimer();
+    stopBackgroundMusic();
+    openResultModal();
+  }
+}
+
+function useHint(teamId){
+  const team = state.teams[teamId];
+  if(!state.settings.hintsEnabled) return;
+  if(team.hintsUsedThisRound>=2) return;
+  if(state.roundStatus!=="running" || team.completed) return;
+  const part = getPart(team);
+  team.hintsUsedThisRound++;
+  team.score = Math.max(0, team.score - POINTS.hintPenalty);
+  const hintText = "\uD83D\uDCA1 "+part.hint+"  ("+(2-team.hintsUsedThisRound)+" hint(s) left)";
+  playSound("hint");
+  render();
+  const box = $("hintBox"+teamId.toUpperCase());
+  box.textContent = hintText;
+  box.classList.add("show");
+}
+
+function celebrate(teamId){
+  const panel = document.querySelector('.team-panel[data-team="'+teamId+'"]');
+  for(let i=0;i<16;i++){
+    const p = document.createElement("div");
+    p.textContent = ["\uD83C\uDF89","\u2B50","\uD83C\uDFC6","\u2728"][i%4];
+    p.style.position="absolute";
+    p.style.left = (Math.random()*90+5)+"%";
+    p.style.top = "-20px";
+    p.style.fontSize = (16+Math.random()*16)+"px";
+    p.style.transition = "transform 1.4s ease-in, opacity 1.4s ease-in";
+    p.style.zIndex = 60;
+    p.style.pointerEvents = "none";
+    panel.appendChild(p);
+    requestAnimationFrame(()=>{
+      p.style.transform = "translateY("+(220+Math.random()*160)+"px) rotate("+(Math.random()*360)+"deg)";
+      p.style.opacity = "0";
+    });
+    setTimeout(()=>p.remove(), 1500);
+  }
+}
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+function startTimer(){
+  stopTimer();
+  state.timerHandle = setInterval(()=>{
+    if(state.roundStatus!=="running") return;
+    state.elapsed++;
+    if(state.timeLimit>0 && state.elapsed>=state.timeLimit){
+      onTimeUp();
+      return;
+    }
+    render();
+  }, 1000);
+}
+function stopTimer(){
+  if(state.timerHandle){ clearInterval(state.timerHandle); state.timerHandle=null; }
+}
+function onTimeUp(){
+  state.roundStatus = "over";
+  stopTimer();
+  stopBackgroundMusic();
+  playSound("timeup");
+  const a = state.teams.a, b = state.teams.b;
+  ["a","b"].forEach(id=>{
+    const t = state.teams[id];
+    if(!t.completed){
+      t.completionTime = state.timeLimit;
+    }
+  });
+  render();
+  openResultModal(true);
+}
+
+/* ============================================================
+   ROUND FLOW CONTROLS
+   ============================================================ */
+function openChallengeModal(){
+  const grid = $("challengeGrid");
+  grid.innerHTML = "";
+  const options = [
+    {key:"vision", num:1, label:"VISION"},
+    {key:"mission", num:2, label:"MISSION"},
+    {key:"corevalues", num:3, label:"CORE VALUES"},
+    {key:"tagline", num:4, label:"TAGLINE"},
+    {key:"mixed", num:5, label:"MIXED CHALLENGE"}
+  ];
+  options.forEach(o=>{
+    const card = document.createElement("div");
+    card.className = "choice-card";
+    card.innerHTML = '<span class="num">'+o.num+'</span>'+o.label;
+    card.addEventListener("click", ()=>selectChallenge(o.key));
+    grid.appendChild(card);
+  });
+  $("modalChallenge").classList.add("show");
+}
+function selectChallenge(key){
+  state.currentChallengeKey = key;
+  if(key==="mixed"){
+    state.currentMixedResolved = MIXED_OPTIONS[Math.floor(Math.random()*MIXED_OPTIONS.length)];
+  } else {
+    state.currentMixedResolved = null;
+  }
+  state.roundStatus = "idle";
+  state.elapsed = 0;
+  state.timeLimit = state.settings.roundTime;
+  startNewChallengeForTeam(state.teams.a);
+  startNewChallengeForTeam(state.teams.b);
+  $("hintBoxA").classList.remove("show");
+  $("hintBoxB").classList.remove("show");
+  $("modalChallenge").classList.remove("show");
+  render();
+  announce("Challenge selected: "+key);
+}
+
+function startRound(){
+  if(!state.currentChallengeKey){ openChallengeModal(); return; }
+  if(state.roundStatus==="over"){
+    resetRoundInternal();
+  }
+  state.roundStatus = "running";
+  playSound("start");
+  startTimer();
+  startBackgroundMusic();
+  render();
+}
+function pauseRound(){
+  if(state.roundStatus==="running"){
+    state.roundStatus = "paused";
+    stopTimer();
+    stopBackgroundMusic();
+  } else if(state.roundStatus==="paused"){
+    state.roundStatus = "running";
+    startTimer();
+    startBackgroundMusic();
+  }
+  render();
+}
+function resetRoundInternal(){
+  state.elapsed = 0;
+  state.roundStatus = "idle";
+  stopTimer();
+  stopBackgroundMusic();
+  if(state.currentChallengeKey){
+    startNewChallengeForTeam(state.teams.a);
+    startNewChallengeForTeam(state.teams.b);
+  }
+  $("hintBoxA").classList.remove("show");
+  $("hintBoxB").classList.remove("show");
+  render();
+}
+function nextRound(){
+  state.roundNumber++;
+  state.currentChallengeKey = null;
+  state.currentMixedResolved = null;
+  state.roundStatus = "idle";
+  state.elapsed = 0;
+  stopTimer();
+  stopBackgroundMusic();
+  state.teams.a = teamState("a");
+  state.teams.b = teamState("b");
+  $("modalResult").classList.remove("show");
+  render();
+  openChallengeModal();
+}
+function endGameInternal(){
+  state.gameEnded = true;
+  stopTimer();
+  stopBackgroundMusic();
+  state.roundStatus = "over";
+  openLeaderboard();
+}
+
+function updateControlAvailability(){
+  $("btnPause").textContent = state.roundStatus==="paused" ? "\u25B6 Resume" : "\u23F8 Pause";
+  $("btnPause").disabled = state.roundStatus==="idle" || state.roundStatus==="over" || !state.currentChallengeKey;
+  $("btnStartRound").disabled = state.roundStatus==="running";
+  $("btnModeToggle").textContent = state.interactionMode==="drag" ? "\uD83D\uDD90 Mode: Drag" : "\uD83D\uDC46 Mode: Select";
+  $("btnMusicToggle").textContent = "\uD83C\uDFB5 Music: "+(state.settings.music ? "On" : "Off");
+}
+
+/* ============================================================
+   RESULT / LEADERBOARD / REVEAL MODALS
+   ============================================================ */
+function openResultModal(timeUp){
+  const a = state.teams.a, b = state.teams.b;
+  let banner;
+  if(timeUp){
+    banner = "\u23F0 TIME'S UP!";
+  } else if(a.finishRank===1 && b.finishRank===1){
+    banner = "\uD83E\uDD1D BOTH TEAMS COMPLETED THE CHALLENGE!";
+  } else if(a.finishRank===1){
+    banner = "\uD83C\uDFC6 "+state.settings.nameA+" WINS THE ROUND!";
+  } else if(b.finishRank===1){
+    banner = "\uD83C\uDFC6 "+state.settings.nameB+" WINS THE ROUND!";
+  } else {
+    banner = "ROUND OVER";
+  }
+  $("resultBanner").textContent = banner;
+  $("resultNameA").textContent = state.settings.nameA;
+  $("resultNameB").textContent = state.settings.nameB;
+  $("resultTimeA").textContent = a.completed ? fmtTime(a.completionTime)+"s" : "Not finished";
+  $("resultTimeB").textContent = b.completed ? fmtTime(b.completionTime)+"s" : "Not finished";
+  $("modalResult").classList.add("show");
+}
+
+function openLeaderboard(){
+  const a = state.teams.a, b = state.teams.b;
+  const body = $("leaderboardBody");
+  body.innerHTML = "";
+  const rows = [
+    {name:state.settings.nameA, score:a.score, medal:"\uD83E\uDD47"},
+    {name:state.settings.nameB, score:b.score, medal:"\uD83E\uDD48"}
+  ].sort((x,y)=>y.score-x.score);
+  const msg = $("leaderboardMsg");
+  if(rows[0].score===rows[1].score){
+    rows.forEach((r,i)=>{
+      const div = document.createElement("div");
+      div.className = "leaderboard-row gold";
+      div.innerHTML = "\uD83E\uDD1D "+r.name+"<span>"+r.score+" POINTS</span>";
+      body.appendChild(div);
+    });
+    msg.textContent = "IT'S A TIE! Both teams demonstrated excellent knowledge of the school's Vision, Mission, Core Values, and Tagline.";
+  } else {
+    rows.forEach((r,i)=>{
+      const div = document.createElement("div");
+      div.className = "leaderboard-row "+(i===0?"gold":"silver");
+      div.innerHTML = (i===0?"\uD83E\uDD47 ":"\uD83E\uDD48 ")+r.name+"<span>"+r.score+" POINTS</span>";
+      body.appendChild(div);
+    });
+    msg.textContent = "";
+  }
+  $("modalLeaderboard").classList.add("show");
+}
+
+function openReveal(){
+  const c = $("revealContent");
+  c.innerHTML = "<h2>\uD83D\uDCD6 THE FULL ANSWERS</h2>"+
+    revealBlock("VISION", ["to become one of the top five international schools in the Kingdom of Saudi Arabia"])+
+    revealBlock("MISSION", ["to provide smart education with international standards through the application of the latest educational methods and with a highly efficient local and international Human Resources in addition to build a strategic partnerships to achieve sustainability"])+
+    revealBlock("CORE VALUES", ["Our understanding of our values will make us one of the top five schools in the Kingdom"], ["Sustainability","Quality","Commitment","Credibility","Responsibility"])+
+    revealBlock("SCHOOL TAGLINE", ["where excellence begins"])+
+    '<div class="modal-actions"><button class="tbtn ghost" id="closeReveal">Close</button></div>';
+  $("modalReveal").classList.add("show");
+  $("closeReveal").addEventListener("click", ()=> $("modalReveal").classList.remove("show"));
+}
+function revealBlock(title, paragraphs, list){
+  let html = '<div class="reveal-block"><h3>'+title+'</h3>';
+  paragraphs.forEach(p=> html += "<p>"+p+"</p>");
+  if(list){
+    html += "<ol>";
+    list.forEach(li=> html += "<li>"+li+"</li>");
+    html += "</ol>";
+  }
+  html += "</div>";
+  return html;
+}
+
+/* ============================================================
+   CONFIRM DIALOG
+   ============================================================ */
+function askConfirm(title, body, onYes){
+  $("confirmTitle").textContent = title;
+  $("confirmBody").textContent = body;
+  state.pendingConfirm = onYes;
+  $("modalConfirm").classList.add("show");
+}
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function openSettings(){
+  $("setNameA").value = state.settings.nameA;
+  $("setNameB").value = state.settings.nameB;
+  $("setTime").value = String(state.settings.roundTime);
+  $("setRounds").value = String(state.settings.totalRounds);
+  $("setSound").checked = state.settings.sound;
+  $("setMusic").checked = state.settings.music;
+  $("setHints").checked = state.settings.hintsEnabled;
+  $("modalSettings").classList.add("show");
+}
+function applySettings(){
+  state.settings.nameA = $("setNameA").value.trim() || "TEAM A";
+  state.settings.nameB = $("setNameB").value.trim() || "TEAM B";
+  state.settings.roundTime = parseInt($("setTime").value,10);
+  state.settings.totalRounds = parseInt($("setRounds").value,10);
+  state.settings.sound = $("setSound").checked;
+  state.settings.music = $("setMusic").checked;
+  state.settings.hintsEnabled = $("setHints").checked;
+  if(state.roundStatus==="idle"){
+    state.timeLimit = state.settings.roundTime;
+  }
+  $("modalSettings").classList.remove("show");
+  if(state.roundStatus==="running" && state.settings.sound && state.settings.music){
+    startBackgroundMusic();
+  } else {
+    stopBackgroundMusic();
+  }
+  render();
+}
+
+/* ============================================================
+   FULL GAME RESET
+   ============================================================ */
+function resetEntireGame(){
+  stopTimer();
+  stopBackgroundMusic();
+  state.roundNumber = 1;
+  state.currentChallengeKey = null;
+  state.currentMixedResolved = null;
+  state.roundStatus = "idle";
+  state.elapsed = 0;
+  state.gameEnded = false;
+  state.teams.a = teamState("a");
+  state.teams.b = teamState("b");
+  $("modalSettings").classList.remove("show");
+  $("modalLeaderboard").classList.remove("show");
+  $("modalResult").classList.remove("show");
+  render();
+}
+
+/* ============================================================
+   EVENT BINDINGS
+   ============================================================ */
+function bindEvents(){
+  $("btnSelectChallenge").addEventListener("click", openChallengeModal);
+  $("closeChallengeModal").addEventListener("click", ()=> $("modalChallenge").classList.remove("show"));
+
+  $("btnStartRound").addEventListener("click", startRound);
+  $("btnPause").addEventListener("click", pauseRound);
+
+  $("btnResetRound").addEventListener("click", ()=>{
+    askConfirm("Reset this round?", "This will re-scramble the current challenge for both teams and reset the round timer. Scores are kept.", resetRoundInternal);
+  });
+  $("btnNextRound").addEventListener("click", nextRound);
+  $("btnGoNextRound").addEventListener("click", ()=>{ $("modalResult").classList.remove("show"); nextRound(); });
+  $("closeResult").addEventListener("click", ()=> $("modalResult").classList.remove("show"));
+
+  $("btnEndGame").addEventListener("click", ()=>{
+    askConfirm("End the game?", "This will stop the current round and show the final leaderboard.", endGameInternal);
+  });
+
+  $("btnSettings").addEventListener("click", openSettings);
+  $("closeSettings").addEventListener("click", ()=> $("modalSettings").classList.remove("show"));
+  $("applySettings").addEventListener("click", applySettings);
+  $("btnResetGame").addEventListener("click", ()=>{
+    askConfirm("Reset the entire competition?", "Are you sure you want to reset the entire competition? All scores and progress will be lost.", resetEntireGame);
+  });
+
+  $("btnModeToggle").addEventListener("click", ()=>{
+    state.interactionMode = state.interactionMode==="drag" ? "select" : "drag";
+    state.teams.a.selectedTileId = null;
+    state.teams.b.selectedTileId = null;
+    render();
+  });
+
+  $("btnMusicToggle").addEventListener("click", ()=>{
+    state.settings.music = !state.settings.music;
+    if(state.roundStatus==="running" && state.settings.sound && state.settings.music){
+      startBackgroundMusic();
+    } else {
+      stopBackgroundMusic();
+    }
+    render();
+  });
+
+  $("btnPrint").addEventListener("click", ()=>{ openReveal(); setTimeout(()=>window.print(), 200); });
+
+  $("checkA").addEventListener("click", ()=>checkAnswer("a"));
+  $("checkB").addEventListener("click", ()=>checkAnswer("b"));
+  $("hintA").addEventListener("click", ()=>useHint("a"));
+  $("hintB").addEventListener("click", ()=>useHint("b"));
+
+  $("confirmYes").addEventListener("click", ()=>{
+    $("modalConfirm").classList.remove("show");
+    if(typeof state.pendingConfirm === "function"){ state.pendingConfirm(); }
+    state.pendingConfirm = null;
+  });
+  $("confirmNo").addEventListener("click", ()=>{
+    $("modalConfirm").classList.remove("show");
+    state.pendingConfirm = null;
+  });
+
+  $("btnReveal").addEventListener("click", openReveal);
+  $("closeLeaderboard").addEventListener("click", ()=> $("modalLeaderboard").classList.remove("show"));
+
+  document.querySelectorAll(".modal-overlay").forEach(ov=>{
+    ov.addEventListener("click", (e)=>{
+      if(e.target===ov && ov.id!=="modalConfirm"){ ov.classList.remove("show"); }
+    });
+  });
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init(){
+  state.timeLimit = state.settings.roundTime;
+  bindEvents();
+  // Registered once; each concurrent pointer/touch is tracked independently
+  // via activeDrags so multiple simultaneous drags on the Smart Board work.
+  document.addEventListener("pointermove", onGlobalPointerMove, {passive:false});
+  document.addEventListener("pointerup", onGlobalPointerEnd, {passive:false});
+  document.addEventListener("pointercancel", onGlobalPointerEnd, {passive:false});
+  render();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+
+// Register the offline service worker so this installs as a real app
+// (Add to Home Screen / Install App) and keeps working with no internet
+// afterward. Service workers require http/https, so this quietly does
+// nothing when the file is opened directly from a USB drive (file://) —
+// the game itself still works fine either way.
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.protocol === "http:")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+
+})();
+</script>
+</body>
+</html>
